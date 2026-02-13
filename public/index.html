@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Locq Generator</title>
+    <style>
+        body { font-family: sans-serif; display: flex; height: 100vh; justify-content: center; align-items: center; background: #f4f4f4; }
+        .box { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
+        input { padding: 10px; margin-bottom: 10px; width: 80%; }
+        button { padding: 10px 20px; background: black; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Generate Key</h2>
+        <input type="password" id="pin" placeholder="Enter PIN (5014)">
+        <br>
+        <button onclick="getKey()">Get Key</button>
+        <p id="result" style="margin-top: 15px; font-weight: bold; color: green;"></p>
+    </div>
+
+    <script>
+        async function getKey() {
+            const pin = document.getElementById('pin').value;
+            const res = await fetch('/api/generate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ pin })
+            });
+            const data = await res.json();
+            
+            if (data.key) {
+                document.getElementById('result').innerText = "Your Key: " + data.key;
+            } else {
+                document.getElementById('result').innerText = "Error: " + data.error;
+                document.getElementById('result').style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
